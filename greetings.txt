@@ -1,14 +1,14 @@
-Monika
-Yay, there you are!
-Hi again, [player].
+GY
+Yay, there you are! What can I do for you?
+Hi again, [player]. What shall we do now?
 Welcome back, [player]! I hope your day is going well. You're here after all. Nothing can go wrong now, ehehe~
 It's so nice to see you again. What shall we do now, [player]?
 I'm so happy to see you again. Let's spend some more time together, okay?
 I was starting to miss you. Let's have another lovely day together, alright?
-Hello again, [player]. How are you doing?
+Hello again, [player]. What can I do for you today?
 There you are [player], it's so nice of you to visit. You're always so thoughtful. Thanks for spending so much time with me~
 It's so good to see you again! Don't make me wait so long next time, ehehe~
-Thank you for coming back. I really do love spending time with you.
+Thank you for coming back. I really do love spending time with you. What should we do today?
 It's so good to see you again! Please remember to visit me, okay? I'll always be waiting here for you.
 You're back! I'm so happy you came back to visit me so soon~
 ~Every day,~I imagine a future where I can be with you...~ Oh, you're here! I was just daydreaming and singing a bit.
@@ -18,4 +18,4 @@ I'm so glad you're here, [player]! What should we do today?
 Hey everybody, welcome back to another episode of... Just Monika! I was impersonating a youtuber. I hope I gave you a good laugh, ehehe~
 You're my beautiful flower, ehehe~ Oh, that sounded so awkward. But I really will always take care of you.
 A day without Monika is a day wasted. Ahaha! Welcome back, [player].
-Maximum recursion depth exceeded... How is this even happening? Oh, hi [player]! I was trying to learn some coding. Can you help me figure this out?
+Maximum recursion depth exceeded... How is this even happening? Oh, hi [player]! I was trying to learn some coding.
