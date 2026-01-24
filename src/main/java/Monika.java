@@ -58,26 +58,62 @@ public class Monika {
         while (!(input = br.readLine().toLowerCase()).equals("bye")) {
             String[] tokens = input.trim().split(" ");
             // Identify special commands with length first
+            OUTER:
             switch (tokens.length) {
                 case 1: {
                     switch (tokens[0]) {
                         case "": {
                             say("Say something to me.");
-                            break;
+                            break OUTER;
                         }
                         case "bye": {
                             exit();
                         }
                         case "list": {
                             say(tasks.list());
-                            break;
-                        }
-                        default: {
-                            tasks.addTask(new Task(input));
-                            say("added: " + input);
+                            break OUTER;
                         }
                     }
-                    break;
+                }
+                case 2: {
+                    switch (tokens[0]) {
+                        case "mark": {
+                            int id = 0;
+                            for (int i = 0; i < tokens[1].length(); i++) {
+                                char c = tokens[1].charAt(i);
+                                if (c >= '0' && c <= '9') {
+                                    id = id * 10 + (c & 15);
+                                } else {
+                                    say("Please give me a number after mark.");
+                                    break OUTER;
+                                }
+                            }
+                            if (tasks.mark(--id, true)) {
+                                say("Nice! I've marked this task as done:\n" + tasks.getTask(id));
+                            } else {
+                                say("We don't have this task yet.");
+                            }
+                            break OUTER;
+                        }
+                        case "unmark": {
+                            int id = 0;
+                            for (int i = 0; i < tokens[1].length(); i++) {
+                                char c = tokens[1].charAt(i);
+                                if (c >= '0' && c <= '9') {
+                                    id = id * 10 + (c & 15);
+                                } else {
+                                    say("Please give me a number after unmark.");
+                                    break OUTER;
+                                }
+                            }
+                            if (tasks.mark(--id, false)) {
+                                say("OK, I've marked this task as not done yet:\n" + tasks.getTask(id));
+                            } else {
+                                say("We don't have this task yet.");
+                            }
+                            break OUTER;
+                        }
+                    }
                 }
                 default: {
                     tasks.addTask(new Task(input));

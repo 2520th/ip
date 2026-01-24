@@ -17,6 +17,18 @@ public class TaskMgr {
         tasks[arrLen++] = task;
     }
 
+    public Task getTask(int id) {
+        return tasks[id];
+    }
+
+    public boolean mark(int id, boolean done) {
+        if (id >= 0 && id < arrLen) {
+            tasks[id].mark(done);
+            return true;
+        }
+        return false;
+    }
+
     public String list() {
         if (arrLen == 0) {
             return "We don't have any tasks yet...";
