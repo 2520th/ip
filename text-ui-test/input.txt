@@ -1,0 +1,18 @@
+event a
+event b /from today
+event c /from
+event d /from today 14:00 /to 18:00
+event e /from 19:00 /to
+todo f
+todo g (some more words here)
+deadline h /by 23:59
+deadline i /by someday
+deadline j
+list
+mark 8
+mark 3
+unmark 8
+list
+Some other unlabled task
+list
+bye

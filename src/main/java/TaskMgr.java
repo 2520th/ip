@@ -37,6 +37,7 @@ public class TaskMgr {
         for (int i = 0; i < arrLen; i++) {
             res.append(i + 1).append(". ").append(tasks[i].toString()).append('\n');
         }
+        res.deleteCharAt(res.length() - 1);
         return res.toString();
     }
 }
