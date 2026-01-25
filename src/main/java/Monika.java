@@ -2,7 +2,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-// IP Week 2 Level 2
+// IP Week 2 Level 4
 // Chat with Monika from Doki Doki Literature Club
 public class Monika {
 
@@ -13,6 +13,15 @@ public class Monika {
 
     private static void say(String msg) {
         pw.println(String.format("%s%s\n%s", line, msg, line));
+    }
+
+    // Treat time-representing StringBuilders from reading tokens after /from, /to, /by sub-commands
+    private static String trimTaskStringBuilder(StringBuilder sb) {
+        if (!sb.isEmpty()) {
+            sb.deleteCharAt(sb.length() - 1);
+            return sb.toString();
+        }
+        return "Unspecified";
     }
 
     // Adapted some randomized greetings from the mod "Monika After Story" from:
@@ -44,76 +53,108 @@ public class Monika {
         }
     }
 
-    private static void exit() {
-        say(" Bye. Hope to see you again soon!");
-        pw.close();
-        System.exit(0);
-    }
-
     public static void main(String[] args) throws IOException {
         greeting();
-        String input;
         TaskMgr tasks = new TaskMgr(16);
-        // This version will store every non "bye" or "list" command
-        while (!(input = br.readLine().toLowerCase()).equals("bye")) {
-            String[] tokens = input.trim().split(" ");
-            // Identify special commands with length first
-            OUTER:
-            switch (tokens.length) {
-                case 1: {
-                    switch (tokens[0]) {
-                        case "": {
-                            say("Say something to me.");
-                            break OUTER;
-                        }
-                        case "bye": {
-                            exit();
-                        }
-                        case "list": {
-                            say(tasks.list());
-                            break OUTER;
-                        }
+        WHILE:
+        while (true) {
+            String input = br.readLine().trim();
+            String[] tokens = input.split(" ");
+            SWITCH:
+            switch (tokens[0].toLowerCase()) {
+                case "": {
+                    say("Say something to me.");
+                    break;
+                }
+                case "bye": {
+                    break WHILE;
+                }
+                case "list": {
+                    if (tokens.length == 1) {
+                        say(tasks.list());
+                        break;
                     }
                 }
-                case 2: {
-                    switch (tokens[0]) {
-                        case "mark": {
-                            int id = 0;
-                            for (int i = 0; i < tokens[1].length(); i++) {
-                                char c = tokens[1].charAt(i);
-                                if (c >= '0' && c <= '9') {
-                                    id = id * 10 + (c & 15);
-                                } else {
-                                    say("Please give me a number after mark.");
-                                    break OUTER;
-                                }
-                            }
-                            if (tasks.mark(--id, true)) {
-                                say("Nice! I've marked this task as done:\n" + tasks.getTask(id));
-                            } else {
-                                say("We don't have this task yet.");
-                            }
-                            break OUTER;
-                        }
-                        case "unmark": {
-                            int id = 0;
-                            for (int i = 0; i < tokens[1].length(); i++) {
-                                char c = tokens[1].charAt(i);
-                                if (c >= '0' && c <= '9') {
-                                    id = id * 10 + (c & 15);
-                                } else {
-                                    say("Please give me a number after unmark.");
-                                    break OUTER;
-                                }
-                            }
-                            if (tasks.mark(--id, false)) {
-                                say("OK, I've marked this task as not done yet:\n" + tasks.getTask(id));
-                            } else {
-                                say("We don't have this task yet.");
-                            }
-                            break OUTER;
+                case "mark", "unmark": {
+                    int id = 0;
+                    boolean isDone = tokens[0].charAt(0) == 'm';
+                    for (int i = 0; i < tokens[1].length(); i++) {
+                        char c = tokens[1].charAt(i);
+                        if (c >= '0' && c <= '9') {
+                            id = id * 10 + (c & 15);
+                        } else {
+                            say(String.format("Please give me a number after %s.", isDone ? "mark" : "unmark"));
+                            break SWITCH;
                         }
                     }
+                    if (tasks.mark(--id, isDone)) {
+                        say(String.format("OK, I've marked this task as %s:\n%s",
+                                isDone ? "done" : "not done yet", tasks.getTask(id)));
+                    } else {
+                        say("We don't have this task yet. Say \"list\" to view task list.");
+                    }
+                    break;
+                }
+                case "todo": {
+                    if (tokens.length > 1) {
+                        Todo t = new Todo(input.substring(5));
+                        tasks.addTask(t);
+                        say(String.format("Got it. I've added this task:\n%s", t));
+                    } else {
+                        say("Hey! The description of an todo task cannot be empty.");
+                    }
+                    break;
+                }
+                case "event": {
+                    if (tokens.length > 1) {
+                        StringBuilder name = new StringBuilder();
+                        StringBuilder from = new StringBuilder();
+                        StringBuilder to = new StringBuilder();
+                        for (int i = 1; i < tokens.length; i++) {
+                            if (tokens[i].equals("/from")) {
+                                for (int j = i + 1; j < tokens.length; j++) {
+                                    if (tokens[j].equals("/to")) {
+                                        for (int k = j + 1; k < tokens.length; k++) {
+                                            to.append(tokens[k]).append(' ');
+                                        }
+                                        break;
+                                    }
+                                    from.append(tokens[j]).append(' ');
+                                }
+                                break;
+                            }
+                            name.append(tokens[i]).append(' ');
+                        }
+                        name.deleteCharAt(name.length() - 1);
+                        Event e = new Event(name.toString(), trimTaskStringBuilder(from), trimTaskStringBuilder(to));
+                        tasks.addTask(e);
+                        say(String.format("Got it. I've added this event:\n%s", e));
+                    } else {
+                        say("Hey! The description of an event cannot be empty.");
+                    }
+                    break;
+                }
+                case "deadline": {
+                    if (tokens.length > 1) {
+                        StringBuilder name = new StringBuilder();
+                        StringBuilder by = new StringBuilder();
+                        for (int i = 1; i < tokens.length; i++) {
+                            if (tokens[i].equals("/by")) {
+                                for (int j = i + 1; j < tokens.length; j++) {
+                                    by.append(tokens[j]).append(' ');
+                                }
+                                break;
+                            }
+                            name.append(tokens[i]).append(' ');
+                        }
+                        name.deleteCharAt(name.length() - 1);
+                        Deadline d = new Deadline(name.toString(), trimTaskStringBuilder(by));
+                        tasks.addTask(d);
+                        say(String.format("I've added this task for you:\n%s", d));
+                    } else {
+                        say("Hey! The description of a deadline task cannot be empty.");
+                    }
+                    break;
                 }
                 default: {
                     tasks.addTask(new Task(input));
@@ -121,6 +162,7 @@ public class Monika {
                 }
             }
         }
-        exit();
+        say(" Bye. Hope to see you again soon!");
+        pw.close();
     }
 }
