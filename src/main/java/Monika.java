@@ -2,17 +2,17 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-// IP Week 2 Level 4
+// IP Week 2 Level 5
 // Chat with Monika from Doki Doki Literature Club
 public class Monika {
 
     private static final PrintWriter pw = new PrintWriter(System.out, true);
     private static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    private static final String line = "____________________________________________________________\n";
     private static String userName;
 
     private static void say(String msg) {
-        pw.println(String.format("%s%s\n%s", line, msg, line));
+        final String LINE = "____________________________________________________________\n";
+        pw.println(String.format("%s%s\n%s", LINE, msg, LINE));
     }
 
     // Treat time-representing StringBuilders from reading tokens after /from, /to, /by sub-commands
@@ -157,8 +157,7 @@ public class Monika {
                     break;
                 }
                 default: {
-                    tasks.addTask(new Task(input));
-                    say("added: " + input);
+                    say("Sorry, I don't know what do you mean.");
                 }
             }
         }
