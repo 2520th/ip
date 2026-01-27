@@ -29,6 +29,19 @@ public class TaskMgr {
         return false;
     }
 
+    public int getSize() {
+        return arrLen;
+    }
+
+    public Task removeTask(int id) {
+        if (id >= 0 && id < arrLen) {
+            Task t = tasks[id];
+            System.arraycopy(tasks, id + 1, tasks, id, --arrLen - id);
+            return t;
+        }
+        return null;
+    }
+
     public String list() {
         if (arrLen == 0) {
             return "We don't have any tasks yet...";

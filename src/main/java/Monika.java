@@ -2,7 +2,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-// IP Week 2 Level 5
+// IP Week 2 Level 6
 // Chat with Monika from Doki Doki Literature Club
 public class Monika {
 
@@ -75,23 +75,35 @@ public class Monika {
                         break;
                     }
                 }
-                case "mark", "unmark": {
+                // Task management matters
+                case "mark", "unmark", "delete": {
                     int id = 0;
-                    boolean isDone = tokens[0].charAt(0) == 'm';
+                    char type = tokens[0].charAt(0);
+                    if (tokens.length == 1) {
+                        say(String.format("Emm, please tell me which task to %s.", tokens[0]));
+                        break;
+                    }
                     for (int i = 0; i < tokens[1].length(); i++) {
                         char c = tokens[1].charAt(i);
                         if (c >= '0' && c <= '9') {
                             id = id * 10 + (c & 15);
                         } else {
-                            say(String.format("Please give me a number after %s.", isDone ? "mark" : "unmark"));
+                            say(String.format("Please give me a number after %s.", tokens[0]));
                             break SWITCH;
                         }
                     }
-                    if (tasks.mark(--id, isDone)) {
+                    String ERR_MSG = "We don't have this task yet. Say \"list\" to view task list.";
+                    if (type == 'd') {
+                        Task t = tasks.removeTask(--id);
+                        say(t == null ? ERR_MSG : String.format("Sure, I've removed this task:\n    " +
+                                "%s\n%d task(s) remaining.", t, tasks.getSize()));
+                        break;
+                    }
+                    if (tasks.mark(--id, type == 'm')) {
                         say(String.format("OK, I've marked this task as %s:\n%s",
-                                isDone ? "done" : "not done yet", tasks.getTask(id)));
+                                type == 'm' ? "done" : "not done yet", tasks.getTask(id)));
                     } else {
-                        say("We don't have this task yet. Say \"list\" to view task list.");
+                        say(ERR_MSG);
                     }
                     break;
                 }
