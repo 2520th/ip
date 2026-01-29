@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 // Task Manager Class
 public class TaskMgr {
     // Dynamic array data structure
@@ -52,5 +55,13 @@ public class TaskMgr {
         }
         res.deleteCharAt(res.length() - 1);
         return res.toString();
+    }
+
+    public List<String> export() {
+        List<String> res = new ArrayList<>(arrLen);
+        for (int i = 0; i < arrLen; i++) {
+            res.add(tasks[i].record());
+        }
+        return res;
     }
 }

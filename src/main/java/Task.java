@@ -1,6 +1,6 @@
 public class Task {
     private final String name;
-    protected boolean isDone = false;
+    private boolean isDone = false;
 
     public Task(String name) {
         this.name = name;
@@ -16,5 +16,9 @@ public class Task {
 
     public String toString() {
         return String.format("[%c] %s", isDone ? 'X' : ' ', name);
+    }
+
+    public String record() {
+        return String.format("%c\u001F%s", isDone ? 'X' : ' ', name);
     }
 }

@@ -12,4 +12,8 @@ public class Event extends Task {
     public String toString() {
         return String.format("[E] %s (from: %s, to: %s)", super.toString(), from, to);
     }
+
+    public String record() {
+        return String.format("E\u001F%s\u001F%s\u001F%s", super.record(), from, to);
+    }
 }

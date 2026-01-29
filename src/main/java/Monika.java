@@ -2,7 +2,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-// IP Week 2 Level 6
+// IP Week 3 Level 7
 // Chat with Monika from Doki Doki Literature Club
 public class Monika {
 
@@ -27,7 +27,7 @@ public class Monika {
     // Adapted some randomized greetings from the mod "Monika After Story" from:
     // https://github.com/Monika-After-Story/MonikaModDev/blob/master/Monika%20After%20Story/game/script-greetings.rpy
     private static void greeting() throws IOException {
-        Path f = Paths.get("greetings.txt");
+        Path f = Paths.get("data/greetings.txt");
         List<String> lines;
         try {
             lines = Files.readAllLines(f);
@@ -53,9 +53,50 @@ public class Monika {
         }
     }
 
+    // Load tasks files into TaskMgr, create a new tasks.txt file if not found
+    private static TaskMgr loadTasks() throws IOException {
+        Path f = Paths.get("data/tasks.txt");
+        if (!Files.exists(f)) {
+            Files.createFile(f);
+            return new TaskMgr(16);
+        }
+        List<String> lines = Files.readAllLines(f);
+        TaskMgr result = new TaskMgr(lines.size() * 2 + 1);
+        for (String line : lines) {
+            Task tmp;
+            String[] tokens = line.split("\u001F");
+            switch (tokens[0].charAt(0)) {
+                case 'T': {
+                    tmp = new Todo(tokens[2]);
+                    break;
+                }
+                case 'D': {
+                    tmp = new Deadline(tokens[2], tokens[3]);
+                    break;
+                }
+                case 'E': {
+                    tmp = new Event(tokens[2], tokens[3], tokens[4]);
+                    break;
+                }
+                default: {
+                    tmp = new Task(tokens[1]);
+                }
+            }
+            tmp.mark(tokens[1].charAt(0) == 'X');
+            result.addTask(tmp);
+        }
+        return result;
+    }
+
+    // Store tasks into tasks.txt file which guarantees existence due to loadTasks() method
+    private static void storeTasks(TaskMgr tm) throws IOException {
+        Path f = Paths.get("data/tasks.txt");
+        Files.write(f, tm.export());
+    }
+
     public static void main(String[] args) throws IOException {
         greeting();
-        TaskMgr tasks = new TaskMgr(16);
+        TaskMgr tasks = loadTasks();
         WHILE:
         while (true) {
             String input = br.readLine().trim();
@@ -173,6 +214,7 @@ public class Monika {
                 }
             }
         }
+        storeTasks(tasks);
         say(" Bye. Hope to see you again soon!");
         pw.close();
     }
