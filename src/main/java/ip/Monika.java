@@ -1,8 +1,11 @@
+package ip;
+
 import java.io.*;
 import java.nio.file.*;
-import java.util.*;
+import java.util.List;
+import java.util.Random;
 
-// IP Week 3 Level 7
+// IP Week 3 Level 8 branch
 // Chat with Monika from Doki Doki Literature Club
 public class Monika {
 
@@ -10,6 +13,7 @@ public class Monika {
     private static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     private static String userName;
 
+    // UI for saying a string message
     private static void say(String msg) {
         final String LINE = "____________________________________________________________\n";
         pw.println(String.format("%s%s\n%s", LINE, msg, LINE));
@@ -27,7 +31,7 @@ public class Monika {
     // Adapted some randomized greetings from the mod "Monika After Story" from:
     // https://github.com/Monika-After-Story/MonikaModDev/blob/master/Monika%20After%20Story/game/script-greetings.rpy
     private static void greeting() throws IOException {
-        Path f = Paths.get("data/greetings.txt");
+        Path f = Paths.get(System.getProperty("data.dir", "data")).resolve("greetings.txt");
         List<String> lines;
         try {
             lines = Files.readAllLines(f);
@@ -55,7 +59,7 @@ public class Monika {
 
     // Load tasks files into TaskMgr, create a new tasks.txt file if not found
     private static TaskMgr loadTasks() throws IOException {
-        Path f = Paths.get("data/tasks.txt");
+        Path f = Paths.get(System.getProperty("data.dir", "data")).resolve("tasks.txt");
         if (!Files.exists(f)) {
             Files.createFile(f);
             return new TaskMgr(16);
@@ -90,7 +94,7 @@ public class Monika {
 
     // Store tasks into tasks.txt file which guarantees existence due to loadTasks() method
     private static void storeTasks(TaskMgr tm) throws IOException {
-        Path f = Paths.get("data/tasks.txt");
+        Path f = Paths.get(System.getProperty("data.dir", "data")).resolve("tasks.txt");
         Files.write(f, tm.export());
     }
 
