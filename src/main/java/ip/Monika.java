@@ -5,7 +5,7 @@ import java.nio.file.*;
 import java.util.List;
 import java.util.Random;
 
-// IP Week 3 Level 8 branch
+// IP Week 3 Level 8: time update
 // Chat with Monika from Doki Doki Literature Club
 public class Monika {
 
@@ -22,7 +22,7 @@ public class Monika {
     // Treat time-representing StringBuilders from reading tokens after /from, /to, /by sub-commands
     private static String trimTaskStringBuilder(StringBuilder sb) {
         if (!sb.isEmpty()) {
-            sb.deleteCharAt(sb.length() - 1);
+            sb.setLength(sb.length() - 1);
             return sb.toString();
         }
         return "Unspecified";
