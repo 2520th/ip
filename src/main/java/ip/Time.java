@@ -32,7 +32,7 @@ public class Time {
         return res;
     }
 
-    // Accepts HHMM, HH-MM, YYYY-MM-DD-HHMM(or HH-MM), DD-MM-YYYY-HHMM(or HH-MM)
+    // Accepts HHMM, HH-MM, YYYYMMDD, YYYY-MM-DD-HHMM(or HH-MM), DD-MM-YYYY-HHMM(or HH-MM)
     public Time(String s) {
         original = s;
         String[] tokens = s.toLowerCase().split("[-/.: ]");
@@ -42,14 +42,25 @@ public class Time {
         year = nowWithZone.getYear();
         month = nowWithZone.getMonthValue();
         day = nowWithZone.getDayOfMonth();
-        hour = nowWithZone.getHour();
-        minute = nowWithZone.getMinute();
+        hour = -1;
+        minute = -1;
         switch (times.size()) {
             case 1: {
                 if (times.getFirst() < 2400) {
+                    // HHMM
                     hour = times.getFirst() / 100;
                     minute = times.getFirst() % 100;
                     isUnderstood = true;
+                } else if (times.getFirst() > year * 10000) {
+                    // YYYYMMDD
+                    int ty = times.getFirst() / 10000, tm = times.getFirst() % 10000, td = tm % 100;
+                    tm /= 100;
+                    if (tm <= 12 && td <= 31) {
+                        year = ty;
+                        month = tm;
+                        day = td;
+                        isUnderstood = true;
+                    }
                 }
                 break;
             }
@@ -115,6 +126,14 @@ public class Time {
 
     @Override
     public String toString() {
-        return isUnderstood ? String.format("%s-%s-%s %s:%s", year, month, day, hour, minute) : original;
+        StringBuilder hm = new StringBuilder();
+        if (hour != -1) {
+            hm.append(' ');
+            if (hour < 10) hm.append("0");
+            hm.append(hour).append(":");
+            if (minute < 10) hm.append("0");
+            hm.append(minute);
+        }
+        return isUnderstood ? String.format("%s-%s-%s%s", year, month, day, hm) : original;
     }
 }
