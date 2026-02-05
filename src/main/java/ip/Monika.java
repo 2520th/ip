@@ -10,15 +10,6 @@ public class Monika {
 
     private static String userName;
 
-    // Treat time-representing StringBuilders from reading tokens after /from, /to, /by sub-commands
-    private static String trimStringBuilder(StringBuilder sb) {
-        if (!sb.isEmpty()) {
-            sb.setLength(sb.length() - 1);
-            return sb.toString();
-        }
-        return "Unspecified";
-    }
-
     // Adapted some randomized greetings from the mod "Monika After Story" from:
     // https://github.com/Monika-After-Story/MonikaModDev/blob/master/Monika%20After%20Story/game/script-greetings.rpy
     private static void greeting(UI ui) throws IOException {

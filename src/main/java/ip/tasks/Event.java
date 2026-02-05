@@ -1,4 +1,6 @@
-package ip;
+package ip.tasks;
+
+import ip.Time;
 
 public class Event extends Task {
 

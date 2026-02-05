@@ -1,4 +1,4 @@
-package ip;
+package ip.tasks;
 
 public class Task {
     private final String name;

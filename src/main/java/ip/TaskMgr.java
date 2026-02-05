@@ -2,6 +2,7 @@ package ip;
 
 import java.util.ArrayList;
 import java.util.List;
+import ip.tasks.*;
 
 // Task Manager Class (contains the task list)
 public class TaskMgr {
