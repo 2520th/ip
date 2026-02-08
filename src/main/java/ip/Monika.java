@@ -16,7 +16,7 @@ public class Monika {
         Storage storage = new Storage();
         List<String> lines = storage.readLines("greetings.txt");
         String msg = "Hello! I'm Monika. What is your name?";
-        if (lines.getFirst().equals("Monika")) {
+        if (lines.get(0).equals("Monika")) {
             ui.say(msg);
             String name = ui.input();
             while (name.isEmpty() || name.equalsIgnoreCase("monika")) {
@@ -29,7 +29,7 @@ public class Monika {
             userName = name;
         } else {
             msg = lines.get(1 + new Random().nextInt(lines.size() - 1));
-            userName = lines.getFirst();
+            userName = lines.get(0);
             ui.say(msg.replace("[player]", userName));
         }
     }

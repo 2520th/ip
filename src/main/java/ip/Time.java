@@ -46,14 +46,14 @@ public class Time {
         minute = -1;
         switch (times.size()) {
             case 1: {
-                if (times.getFirst() < 2400) {
+                if (times.get(0) < 2400) {
                     // HHMM
-                    hour = times.getFirst() / 100;
-                    minute = times.getFirst() % 100;
+                    hour = times.get(0) / 100;
+                    minute = times.get(0) % 100;
                     isUnderstood = true;
-                } else if (times.getFirst() > year * 10000) {
+                } else if (times.get(0) > year * 10000) {
                     // YYYYMMDD
-                    int ty = times.getFirst() / 10000, tm = times.getFirst() % 10000, td = tm % 100;
+                    int ty = times.get(0) / 10000, tm = times.get(0) % 10000, td = tm % 100;
                     tm /= 100;
                     if (tm <= 12 && td <= 31) {
                         year = ty;
@@ -65,21 +65,21 @@ public class Time {
                 break;
             }
             case 2: {
-                if (times.getFirst() < 24 && times.get(1) < 60) {
-                    hour = times.getFirst();
+                if (times.get(0) < 24 && times.get(1) < 60) {
+                    hour = times.get(0);
                     minute = times.get(1);
                     isUnderstood = true;
                 }
                 break;
             }
             case 3: {
-                if (times.getFirst() >= year && times.get(1) <= 12 && times.get(2) <= 31) {
-                    year = times.getFirst();
+                if (times.get(0) >= year && times.get(1) <= 12 && times.get(2) <= 31) {
+                    year = times.get(0);
                     month = times.get(1);
                     day = times.get(2);
                     isUnderstood = true;
-                } else if (times.getFirst() <= 31 && times.get(1) <= 12 && times.get(2) >= year) {
-                    day = times.getFirst();
+                } else if (times.get(0) <= 31 && times.get(1) <= 12 && times.get(2) >= year) {
+                    day = times.get(0);
                     month = times.get(1);
                     year = times.get(2);
                     isUnderstood = true;
@@ -87,15 +87,15 @@ public class Time {
                 break;
             }
             case 4: {
-                if (times.getFirst() >= year && times.get(1) <= 12 && times.get(2) <= 31 && times.get(3) < 2400) {
-                    year = times.getFirst();
+                if (times.get(0) >= year && times.get(1) <= 12 && times.get(2) <= 31 && times.get(3) < 2400) {
+                    year = times.get(0);
                     month = times.get(1);
                     day = times.get(2);
                     hour = times.get(3) / 100;
                     minute = times.get(3) % 100;
                     isUnderstood = true;
-                } else if (times.getFirst() <= 31 && times.get(1) <= 12 && times.get(2) >= year && times.get(3) < 2400) {
-                    day = times.getFirst();
+                } else if (times.get(0) <= 31 && times.get(1) <= 12 && times.get(2) >= year && times.get(3) < 2400) {
+                    day = times.get(0);
                     month = times.get(1);
                     year = times.get(2);
                     hour = times.get(3) / 100;
@@ -105,15 +105,15 @@ public class Time {
                 break;
             }
             case 5: {
-                if (times.getFirst() >= year && times.get(1) <= 12 && times.get(2) <= 31 && times.get(3) < 24 && times.get(4) < 60) {
-                    year = times.getFirst();
+                if (times.get(0) >= year && times.get(1) <= 12 && times.get(2) <= 31 && times.get(3) < 24 && times.get(4) < 60) {
+                    year = times.get(0);
                     month = times.get(1);
                     day = times.get(2);
                     hour = times.get(3);
                     minute = times.get(4);
                     isUnderstood = true;
-                } else if (times.getFirst() <= 31 && times.get(1) <= 12 && times.get(2) >= year && times.get(3) < 24 && times.get(4) < 60) {
-                    day = times.getFirst();
+                } else if (times.get(0) <= 31 && times.get(1) <= 12 && times.get(2) >= year && times.get(3) < 24 && times.get(4) < 60) {
+                    day = times.get(0);
                     month = times.get(1);
                     year = times.get(2);
                     hour = times.get(3);
