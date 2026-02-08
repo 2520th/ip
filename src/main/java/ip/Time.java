@@ -21,6 +21,7 @@ public class Time {
         return res;
     }
 
+    // Parse and filter tokenized string words to purely integers representing time
     private List<Integer> toTimes(String[] tokens) {
         List<Integer> res = new ArrayList<>();
         for (String token : tokens) {

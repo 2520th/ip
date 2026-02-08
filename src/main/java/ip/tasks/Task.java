@@ -16,6 +16,7 @@ public class Task {
         return name;
     }
 
+    @Override
     public String toString() {
         return String.format("[%c] %s", isDone ? 'X' : ' ', name);
     }

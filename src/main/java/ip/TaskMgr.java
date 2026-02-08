@@ -56,7 +56,7 @@ public class TaskMgr {
         return tasks[id];
     }
 
-    // marks event number [id] as [isDone]
+    // marks event number [id] as [isDone], return marking status (success = true)
     public boolean mark(int id, boolean isDone) {
         if (id >= 0 && id < arrLen) {
             tasks[id].mark(isDone);
