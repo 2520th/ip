@@ -64,6 +64,12 @@ public class Executor {
                 }
                 return "Hey! The description of an todo task cannot be empty.";
             }
+            case "find": {
+                if (cmd.getContents().length == 1) {
+                    return taskList.find(cmd.getContents()[0]);
+                }
+                return "Please tell me one keyword to find.";
+            }
             case "event": {
                 if (cmd.getContents().length > 0) {
                     StringBuilder name = new StringBuilder();

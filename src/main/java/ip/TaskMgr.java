@@ -93,6 +93,23 @@ public class TaskMgr {
         return res.toString();
     }
 
+    /**
+     * find method for user to search a keyword for relevant tasks
+     * @param pattern is what the user wants to find
+     * @return a whole String containing a list of matched strings for Monika to say
+     */
+    public String find(String pattern) {
+        StringBuilder res = new StringBuilder();
+        int index = 0;
+        res.append("Here are the matching tasks in your list:\n");
+        for (int i = 0; i < arrLen; i++) {
+            if (tasks[i].getName().contains(pattern)) {
+                res.append(++index).append(". ").append(tasks[i]).append('\n');
+            }
+        }
+        return res.toString();
+    }
+
     // Export all tasks' records to a List of Strings ready to write in tasks.txt file
     public List<String> export() {
         List<String> res = new ArrayList<>(arrLen);

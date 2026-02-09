@@ -4,14 +4,20 @@ import java.io.*;
 import java.util.List;
 import java.util.Random;
 
-// IP Week 3 Level 8: add OOP
+// IP Week 3 JavaDoc
 // Chat with Monika from Doki Doki Literature Club
 public class Monika {
 
     private static String userName;
 
-    // Adapted some randomized greetings from the mod "Monika After Story" from:
-    // https://github.com/Monika-After-Story/MonikaModDev/blob/master/Monika%20After%20Story/game/script-greetings.rpy
+    /**
+     * Greeting method asking for username for the first run
+     * Randomly picks a greeting from the mod "Monika After Story":
+     * github.com/Monika-After-Story/MonikaModDev/blob/master/Monika%20After%20Story/game/script-greetings.rpy
+     * @param ui
+     * @throws IOException
+     * IOException handled due to BufferedReader and PrintWriter from ui
+     */
     private static void greeting(UI ui) throws IOException {
         Storage storage = new Storage();
         List<String> lines = storage.readLines("greetings.txt");
