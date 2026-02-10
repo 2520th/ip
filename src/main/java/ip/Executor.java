@@ -4,7 +4,11 @@ import ip.tasks.*;
 
 public class Executor {
 
-    // Treat time-representing StringBuilders from reading tokens after /from, /to, /by sub-commands
+    /**
+     * Treat time-representing StringBuilders from reading tokens after /from, /to, /by sub-commands
+     * @param sb takes in StringBuilder containing time info
+     * @return correctly trimmed String
+     */
     private String trimStringBuilder(StringBuilder sb) {
         if (!sb.isEmpty()) {
             sb.setLength(sb.length() - 1);
@@ -13,7 +17,12 @@ public class Executor {
         return "Unspecified";
     }
 
-    // Perform logic operations based on command input
+    /**
+     * Perform main logic operations here based on command input
+     * @param cmd := command type as a String
+     * @param taskList := taskMgr array that Monika is currently holding in memory
+     * @return execute result as a whole String for Monika to say directly
+     */
     public String execute(Command cmd, TaskMgr taskList) {
 
         if (cmd == null) {
@@ -24,6 +33,7 @@ public class Executor {
             case "bye", "exit": {
                 return null;
             }
+            // Intentional fall through here if list is not a command on its own
             case "list": {
                 if (cmd.getContents().length == 0) {
                     return taskList.list();

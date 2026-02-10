@@ -21,6 +21,12 @@ public class Task {
         return String.format("[%c] %s", isDone ? 'X' : ' ', name);
     }
 
+    /**
+     * Convert to string for txt file storage purpose
+     * Use 001F as a robust separator
+     * Inherited by child classes of Task
+     * @return String to be directly store in disk file
+     */
     public String record() {
         return String.format("%c\u001F%s", isDone ? 'X' : ' ', name);
     }

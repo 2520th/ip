@@ -33,7 +33,14 @@ public class Time {
         return res;
     }
 
-    // Accepts HHMM, HH-MM, YYYYMMDD, YYYY-MM-DD-HHMM(or HH-MM), DD-MM-YYYY-HHMM(or HH-MM)
+    /**
+     * Accept formats: HHMM, HH-MM, YYYYMMDD, YYYY-MM-DD-HHMM(or HH-MM), DD-MM-YYYY-HHMM(or HH-MM)
+     * A large constructor here with time identifying logic
+     * Assumes date = today if not specified
+     * Ignores hour and minute if only date specified
+     * Understood time will set isUnderstood to true, otherwise false
+     * @param s as a String which contains the correctly formatted String
+     */
     public Time(String s) {
         original = s;
         String[] tokens = s.toLowerCase().split("[-/.: ]");

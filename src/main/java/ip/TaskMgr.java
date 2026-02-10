@@ -14,7 +14,11 @@ public class TaskMgr {
         tasks = new Task[size];
     }
 
-    // Adds a single task to TaskMgr at amortized O(1) time
+    /**
+     * Adds a single task to TaskMgr at amortized O(1) time
+     * Expands by a factor of 2, similar to ArrayList implementation
+     * @param task is the task to add to the data structure.
+     */
     public void addTask(Task task) {
         if (arrLen == tasks.length) {
             Task[] newTasks = new Task[arrLen * 2];
@@ -24,7 +28,11 @@ public class TaskMgr {
         tasks[arrLen++] = task;
     }
 
-    // Takes in a list of strings read from tasks.txt and put it into a new TaskMgr
+    /**
+     * Takes in a list of strings read from tasks.txt and put it into a new TaskMgr
+     * Takes care of decode and classification of tasks when adding as String
+     * @param lines comes from NIO read all lines method
+     */
     public void addAllTasks(List<String> lines) {
         for (String line : lines) {
             Task tmp;
@@ -52,11 +60,17 @@ public class TaskMgr {
         }
     }
 
+    // Just a getter as usual
     public Task getTask(int id) {
         return tasks[id];
     }
 
-    // marks event number [id] as [isDone], return marking status (success = true)
+    /**
+     * Mark event number [id] as [isDone]
+     * @param id := event number in the array
+     * @param isDone := mark vs unmark specification
+     * @return marking status (success = true)
+     */
     public boolean mark(int id, boolean isDone) {
         if (id >= 0 && id < arrLen) {
             tasks[id].mark(isDone);
@@ -70,7 +84,11 @@ public class TaskMgr {
         return arrLen;
     }
 
-    // Simple O(n) removal from ordered array, return removed task
+    /**
+     * Simple O(n) removal from ordered array, return removed task
+     * @param id := event number in the array
+     * @return removed task if successful, else null
+     */
     public Task removeTask(int id) {
         if (id >= 0 && id < arrLen) {
             Task t = tasks[id];
