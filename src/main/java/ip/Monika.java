@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.List;
 import java.util.Random;
 
-// IP Week 3 JavaDoc
+// IP Week 3 Level-9: Add find method
 // Chat with Monika from Doki Doki Literature Club
 public class Monika {
 
