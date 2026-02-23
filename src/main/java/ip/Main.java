@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 // Chat with Monika from Doki Doki Literature Club
 public class Main extends Application {
 
-    private Monika monika = new Monika();
+    private final Monika monika = new Monika();
 
     public Main() throws IOException {}
 
@@ -25,6 +25,7 @@ public class Main extends Application {
             stage.setScene(scene);
             fxmlLoader.<MainWindow>getController().setMonika(monika);
             stage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -33,9 +33,15 @@ public class MainWindow extends AnchorPane {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    /** Injects the Duke instance */
-    public void setMonika(Monika d) {
-        monika = d;
+    /** Injects the Monika instance */
+    public void setMonika(Monika m) throws IOException {
+        monika = m;
+        say(monika.greeting());
+    }
+
+    /** simply message to user */
+    public void say(String msg) {
+        dialogContainer.getChildren().add(DialogBox.getMonikaDialog(msg, monikaImage));
     }
 
     /**
