@@ -1,14 +1,19 @@
 package ip;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-// IP Week 3 Level-9: Add find method
-// Chat with Monika from Doki Doki Literature Club
 public class Monika {
 
-    private static String userName;
+    private final Parser parser = new Parser();
+    private final Executor exe = new Executor();
+    private final Storage storage = new Storage();
+    private final TaskMgr tasks;
+
+    public Monika() throws IOException {
+        tasks = storage.loadTasks();
+    }
 
     /**
      * Greeting method asking for username for the first run
@@ -22,6 +27,7 @@ public class Monika {
         Storage storage = new Storage();
         List<String> lines = storage.readLines("greetings.txt");
         String msg = "Hello! I'm Monika. What is your name?";
+        String userName;
         if (lines.get(0).equals("Monika")) {
             ui.say(msg);
             String name = ui.input();
@@ -32,7 +38,6 @@ public class Monika {
             ui.say(String.format("Nice to meet you %s, welcome to the Literature Club! What can I help you today?", name));
             lines.set(0, name);
             storage.writeLines("greetings.txt", lines);
-            userName = name;
         } else {
             msg = lines.get(1 + new Random().nextInt(lines.size() - 1));
             userName = lines.get(0);
@@ -40,23 +45,14 @@ public class Monika {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-        UI ui = new UI();
-        greeting(ui);
-        Storage storage = new Storage();
-        TaskMgr tasks = storage.loadTasks();
-        Parser parser = new Parser();
-        Executor exe = new Executor();
-        while (true) {
-            Command cmd = parser.parse(ui.input());
-            String s = exe.execute(cmd, tasks);
-            if (s == null) {
-                break;
-            } else {
-                ui.say(s);
-            }
+
+    public String getResponse(String input) throws IOException {
+        Command cmd = parser.parse(input);
+        String s = exe.execute(cmd, tasks);
+        if (s == null) {
+            storage.storeTasks(tasks);
+            System.exit(0);
         }
-        storage.storeTasks(tasks);
-        ui.say(" Bye. Hope to see you again soon!");
+        return s;
     }
 }
