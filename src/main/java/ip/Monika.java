@@ -11,6 +11,7 @@ public class Monika {
     private final Storage storage = new Storage();
     private final TaskMgr tasks;
 
+    // 0 = normal, 1 = waiting for a username input
     private int inputState = 0;
 
     public Monika() throws IOException {
@@ -33,7 +34,7 @@ public class Monika {
         } else {
             msg = lines.get(1 + new Random().nextInt(lines.size() - 1));
             userName = lines.get(0);
-            msg.replace("[player]", userName);
+            msg = msg.replace("[player]", userName);
         }
         return msg;
     }

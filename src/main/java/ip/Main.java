@@ -24,6 +24,8 @@ public class Main extends Application {
             Scene scene = new Scene(ap);
             stage.setScene(scene);
             fxmlLoader.<MainWindow>getController().setMonika(monika);
+            stage.setMinHeight(220);
+            stage.setMinWidth(417);
             stage.show();
 
         } catch (IOException e) {
@@ -32,25 +34,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        /*
-        UI ui = new UI();
-        greeting(ui);
-        Storage storage = new Storage();
-        TaskMgr tasks = storage.loadTasks();
-        Parser parser = new Parser();
-        Executor exe = new Executor();
-        while (true) {
-            Command cmd = parser.parse(ui.input());
-            String s = exe.execute(cmd, tasks);
-            if (s == null) {
-                break;
-            } else {
-                ui.say(s);
-            }
-        }
-        storage.storeTasks(tasks);
-        ui.say(" Bye. Hope to see you again soon!");
-         */
         Application.launch(args);
     }
 }
