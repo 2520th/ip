@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-// IP Week 4 Level-10: Add GUI
+// IP Week 5: Add Assertions
 // Chat with Monika from Doki Doki Literature Club
 public class Main extends Application {
 

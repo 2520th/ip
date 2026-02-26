@@ -41,6 +41,7 @@ public class MainWindow extends AnchorPane {
 
     /** simply message to user */
     public void say(String msg) {
+        assert msg != null : "Response is null";
         dialogContainer.getChildren().add(DialogBox.getMonikaDialog(msg, monikaImage));
     }
 
@@ -52,6 +53,7 @@ public class MainWindow extends AnchorPane {
     private void handleUserInput() throws IOException {
         String input = userInput.getText();
         String response = monika.getResponse(input);
+        assert response != null : "Response is null";
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
                 DialogBox.getMonikaDialog(response, monikaImage)
