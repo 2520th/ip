@@ -54,10 +54,10 @@ public class MainWindow extends AnchorPane {
         String input = userInput.getText();
         String response = monika.getResponse(input);
         assert response != null : "Response is null";
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getMonikaDialog(response, monikaImage)
-        );
+        if (!input.isEmpty()) {
+            dialogContainer.getChildren().add(DialogBox.getUserDialog(input, userImage));
+        }
+        dialogContainer.getChildren().add(DialogBox.getMonikaDialog(response, monikaImage));
         userInput.clear();
     }
 }

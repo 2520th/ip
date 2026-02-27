@@ -25,8 +25,8 @@ public class Executor {
      */
     public String execute(Command cmd, TaskMgr taskList) {
 
-        if (cmd == null) {
-            return "Say something to me.";
+        if (cmd == null || cmd.getCmdType().isEmpty()) {
+            return "Don't be shy, say something to me.";
         }
 
         switch (cmd.getCmdType()) {
@@ -46,6 +46,8 @@ public class Executor {
                 if (cmd.getContents().length == 0) {
                     return String.format("Emm, please tell me which task to %s.", cmd.getCmdType());
                 }
+
+                // Ensures user entering a correct number
                 for (int i = 0; i < cmd.getContents()[0].length(); i++) {
                     char c = cmd.getContents()[0].charAt(i);
                     if (c >= '0' && c <= '9') {
@@ -54,12 +56,16 @@ public class Executor {
                         return String.format("Please give me a number after %s.", cmd.getCmdType());
                     }
                 }
+
                 String ERR_MSG = "We don't have this task yet. Say \"list\" to view task list.";
+                // Tries to delete the chosen task
                 if (type == 'd') {
                     Task t = taskList.removeTask(--id);
                     return t == null ? ERR_MSG : String.format("Sure, I've removed this task:\n    " +
                             "%s\n%d task(s) remaining.", t, taskList.getSize());
                 }
+
+                // Tries to mark the chosen task
                 if (taskList.mark(--id, type == 'm')) {
                     return String.format("OK, I've marked this task as %s:\n%s",
                             type == 'm' ? "done" : "not done yet", taskList.getTask(id));
@@ -83,23 +89,22 @@ public class Executor {
             case "event": {
                 if (cmd.getContents().length > 0) {
                     StringBuilder name = new StringBuilder();
-                    StringBuilder from = new StringBuilder();
-                    StringBuilder to = new StringBuilder();
-                    for (int i = 0; i < cmd.getContents().length; i++) {
-                        if (cmd.getContents()[i].equals("/from")) {
-                            for (int j = i + 1; j < cmd.getContents().length; j++) {
-                                if (cmd.getContents()[j].equals("/to")) {
-                                    for (int k = j + 1; k < cmd.getContents().length; k++) {
-                                        to.append(cmd.getContents()[k]).append(' ');
-                                    }
-                                    break;
-                                }
-                                from.append(cmd.getContents()[j]).append(' ');
-                            }
-                            break;
-                        }
+                    int i = 0;
+                    for (; i < cmd.getContents().length && !cmd.getContents()[i].equals("/from"); i++) {
                         name.append(cmd.getContents()[i]).append(' ');
                     }
+
+                    ++i;
+                    StringBuilder from = new StringBuilder();
+                    for (; i < cmd.getContents().length && !cmd.getContents()[i].equals("/to"); i++) {
+                        from.append(cmd.getContents()[i]).append(' ');
+                    }
+
+                    StringBuilder to = new StringBuilder();
+                    for (int j = i + 1; j < cmd.getContents().length; j++) {
+                        to.append(cmd.getContents()[j]).append(' ');
+                    }
+
                     Event e = new Event(trimStringBuilder(name), trimStringBuilder(from), trimStringBuilder(to));
                     taskList.addTask(e);
                     return String.format("Got it. I've added this event:\n%s", e);
@@ -109,16 +114,16 @@ public class Executor {
             case "deadline": {
                 if (cmd.getContents().length > 0) {
                     StringBuilder name = new StringBuilder();
-                    StringBuilder by = new StringBuilder();
-                    for (int i = 0; i < cmd.getContents().length; i++) {
-                        if (cmd.getContents()[i].equals("/by")) {
-                            for (int j = i + 1; j < cmd.getContents().length; j++) {
-                                by.append(cmd.getContents()[j]).append(' ');
-                            }
-                            break;
-                        }
+                    int i = 0;
+                    for (; i < cmd.getContents().length && !cmd.getContents()[i].equals("/by"); i++) {
                         name.append(cmd.getContents()[i]).append(' ');
                     }
+
+                    StringBuilder by = new StringBuilder();
+                    for (int j = i + 1; j < cmd.getContents().length; j++) {
+                        by.append(cmd.getContents()[j]).append(' ');
+                    }
+
                     Deadline d = new Deadline(trimStringBuilder(name), trimStringBuilder(by));
                     taskList.addTask(d);
                     return String.format("I've added this task for you:\n%s", d);
