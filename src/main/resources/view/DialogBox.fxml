@@ -5,24 +5,18 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 
-<fx:root alignment="TOP_RIGHT"
-         maxWidth="Infinity"
-         type="javafx.scene.layout.HBox"
-         xmlns="http://javafx.com/javafx/17"
-         xmlns:fx="http://javafx.com/fxml/1">
+<fx:root alignment="TOP_RIGHT" maxWidth="Infinity" stylesheets="@../css/dialog-box.css" type="javafx.scene.layout.HBox" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
 
     <children>
-        <Label fx:id="dialog"
-               text="Label"
-               wrapText="true"
-               maxWidth="Infinity"
-               HBox.hgrow="ALWAYS"/>
+        <Label fx:id="dialog" text="Label" wrapText="true" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets left="7.0" right="7.0" />
+         </HBox.margin>
+         <padding>
+            <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+         </padding></Label>
 
-        <ImageView fx:id="displayPicture"
-                   fitHeight="99.0"
-                   fitWidth="99.0"
-                   pickOnBounds="true"
-                   preserveRatio="true" />
+        <ImageView fx:id="displayPicture" fitHeight="99.0" fitWidth="99.0" pickOnBounds="true" preserveRatio="true" />
     </children>
 
     <padding>

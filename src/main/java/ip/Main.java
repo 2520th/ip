@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-// IP Week 5: Add Assertions
+// IP Week 5: Add Extension
 // Chat with Monika from Doki Doki Literature Club
 public class Main extends Application {
 
@@ -26,6 +26,7 @@ public class Main extends Application {
             fxmlLoader.<MainWindow>getController().setMonika(monika);
             stage.setMinHeight(220);
             stage.setMinWidth(417);
+            stage.setTitle("Chat with Monika");
             stage.show();
 
         } catch (IOException e) {

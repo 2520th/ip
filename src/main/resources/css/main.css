@@ -1,0 +1,50 @@
+.root {
+    -fx-background-image: url("../images/background.png");
+    -fx-background-repeat: repeat;
+}
+
+.text-field {
+    -fx-border-color: rgb(244, 197, 220);
+    -fx-border-width: 2px;
+    -fx-background-color: rgb(255, 230, 240);
+    -fx-font: 16px "Aller";
+}
+
+.button {
+    -fx-border-color: rgb(244, 197, 220);
+    -fx-border-width: 2px;
+    -fx-background-color: rgb(255, 230, 240);
+    -fx-font: bold 16px "Aller";
+}
+
+.button:hover {
+    -fx-background-color: white;
+    -fx-text-fill: rgb(238, 178, 168);
+}
+
+.button:pressed {
+    -fx-text-fill: black;
+}
+
+.scroll-pane,
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar {
+    -fx-font-size: 10px;
+    -fx-background-color: rgb(255, 230, 240);
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: rgb(253, 192, 222);
+    -fx-background-radius: 1em;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-pref-height: 0;
+    -fx-opacity: 0;
+}
+
+

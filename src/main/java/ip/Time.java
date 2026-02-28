@@ -1,12 +1,13 @@
 package ip;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.*;
 
 public class Time {
     private final String original;
     private boolean isUnderstood;
-    private int year, month, day, hour, minute;
+    private LocalDateTime time;
 
     // String to valid time-representing int
     private int toNum(String s) {
@@ -33,6 +34,15 @@ public class Time {
         return res;
     }
 
+    boolean isValidDate(int year, int month, int day) {
+        if (month < 1 || month > 12) return false;
+        return YearMonth.of(year, month).isValidDay(day);
+    }
+
+    boolean isValidTime(int hour, int minute) {
+        return hour >= 0 && hour < 24 && minute >= 0 && minute < 60;
+    }
+
     /**
      * Accept formats: HHMM, HH-MM, YYYYMMDD, YYYY-MM-DD-HHMM(or HH-MM), DD-MM-YYYY-HHMM(or HH-MM)
      * A large constructor here with time identifying logic
@@ -46,86 +56,64 @@ public class Time {
         String[] tokens = s.toLowerCase().split("[-/.: ]");
         isUnderstood = false;
         List<Integer> times = toTimes(tokens);
-        ZonedDateTime nowWithZone = ZonedDateTime.now();
-        year = nowWithZone.getYear();
-        month = nowWithZone.getMonthValue();
-        day = nowWithZone.getDayOfMonth();
-        hour = -1;
-        minute = -1;
+        LocalDateTime now = LocalDateTime.now();
         switch (times.size()) {
             case 1: {
-                if (times.get(0) < 2400) {
+                int h = times.get(0) / 100, m = times.get(0) % 100;
+                if (isValidTime(h, m)) {
                     // HHMM
-                    hour = times.get(0) / 100;
-                    minute = times.get(0) % 100;
+                    time = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), h, m);
+                    if (time.isBefore(now)) {
+                        time = time.plusDays(1);
+                    }
                     isUnderstood = true;
-                } else if (times.get(0) > year * 10000) {
+                } else if (times.get(0) > now.getYear() * 10000) {
                     // YYYYMMDD
-                    int ty = times.get(0) / 10000, tm = times.get(0) % 10000, td = tm % 100;
-                    tm /= 100;
-                    if (tm <= 12 && td <= 31) {
-                        year = ty;
-                        month = tm;
-                        day = td;
+                    int ty = times.get(0) / 10000, tm = times.get(0) % 10000 / 100, td = tm % 100;
+                    if (isValidDate(ty, tm, td)) {
+                        time = LocalDateTime.of(ty, tm, td, 0, 0);
                         isUnderstood = true;
                     }
                 }
                 break;
             }
             case 2: {
-                if (times.get(0) < 24 && times.get(1) < 60) {
-                    hour = times.get(0);
-                    minute = times.get(1);
+                if (isValidTime(times.get(0), times.get(1))) {
+                    time = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), times.get(0), times.get(1));
+                    if (time.isBefore(now)) {
+                        time = time.plusDays(1);
+                    }
                     isUnderstood = true;
                 }
                 break;
             }
             case 3: {
-                if (times.get(0) >= year && times.get(1) <= 12 && times.get(2) <= 31) {
-                    year = times.get(0);
-                    month = times.get(1);
-                    day = times.get(2);
+                if (isValidDate(times.get(0), times.get(1), times.get(2))) {
+                    time = LocalDateTime.of(times.get(0), times.get(1), times.get(2), 0, 0, 0);
                     isUnderstood = true;
-                } else if (times.get(0) <= 31 && times.get(1) <= 12 && times.get(2) >= year) {
-                    day = times.get(0);
-                    month = times.get(1);
-                    year = times.get(2);
+                } else if (isValidDate(times.get(2), times.get(1), times.get(0))) {
+                    time = LocalDateTime.of(times.get(2), times.get(1), times.get(0), 0, 0, 0);
                     isUnderstood = true;
                 }
                 break;
             }
             case 4: {
-                if (times.get(0) >= year && times.get(1) <= 12 && times.get(2) <= 31 && times.get(3) < 2400) {
-                    year = times.get(0);
-                    month = times.get(1);
-                    day = times.get(2);
-                    hour = times.get(3) / 100;
-                    minute = times.get(3) % 100;
+                int h = times.get(3) / 100, m = times.get(3) % 100;
+                if (isValidDate(times.get(0), times.get(1), times.get(2)) && isValidTime(h, m)) {
+                    time = LocalDateTime.of(times.get(0), times.get(1), times.get(2), h, m, 0);
                     isUnderstood = true;
-                } else if (times.get(0) <= 31 && times.get(1) <= 12 && times.get(2) >= year && times.get(3) < 2400) {
-                    day = times.get(0);
-                    month = times.get(1);
-                    year = times.get(2);
-                    hour = times.get(3) / 100;
-                    minute = times.get(3) % 100;
+                } else if (isValidDate(times.get(2), times.get(1), times.get(0)) && isValidTime(h, m)) {
+                    time = LocalDateTime.of(times.get(2), times.get(1), times.get(0), h, m, 0);
                     isUnderstood = true;
                 }
                 break;
             }
             case 5: {
-                if (times.get(0) >= year && times.get(1) <= 12 && times.get(2) <= 31 && times.get(3) < 24 && times.get(4) < 60) {
-                    year = times.get(0);
-                    month = times.get(1);
-                    day = times.get(2);
-                    hour = times.get(3);
-                    minute = times.get(4);
+                if (isValidDate(times.get(0), times.get(1), times.get(2)) && isValidTime(times.get(3), times.get(4))) {
+                    time = LocalDateTime.of(times.get(0), times.get(1), times.get(2), times.get(3), times.get(4), 0);
                     isUnderstood = true;
-                } else if (times.get(0) <= 31 && times.get(1) <= 12 && times.get(2) >= year && times.get(3) < 24 && times.get(4) < 60) {
-                    day = times.get(0);
-                    month = times.get(1);
-                    year = times.get(2);
-                    hour = times.get(3);
-                    minute = times.get(4);
+                } else if (isValidDate(times.get(2), times.get(1), times.get(0)) && isValidTime(times.get(3), times.get(4))){
+                    time = LocalDateTime.of(times.get(2), times.get(1), times.get(0), times.get(3), times.get(4), 0);
                     isUnderstood = true;
                 }
             }
@@ -134,14 +122,6 @@ public class Time {
 
     @Override
     public String toString() {
-        StringBuilder hm = new StringBuilder();
-        if (hour != -1) {
-            hm.append(' ');
-            if (hour < 10) hm.append("0");
-            hm.append(hour).append(":");
-            if (minute < 10) hm.append("0");
-            hm.append(minute);
-        }
-        return isUnderstood ? String.format("%s-%s-%s%s", year, month, day, hm) : original;
+        return isUnderstood ? time.toString() : original;
     }
 }
