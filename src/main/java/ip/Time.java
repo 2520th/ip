@@ -21,10 +21,28 @@ public class Time {
             "sat", DayOfWeek.SATURDAY,
             "sun", DayOfWeek.SUNDAY
     );
+    private final Map<String, Integer> months = Map.ofEntries(
+            Map.entry("jan", 1),
+            Map.entry("feb", 2),
+            Map.entry("mar", 3),
+            Map.entry("apr", 4),
+            Map.entry("may", 5),
+            Map.entry("jun", 6),
+            Map.entry("jul", 7),
+            Map.entry("aug", 8),
+            Map.entry("sep", 9),
+            Map.entry("oct", 10),
+            Map.entry("nov", 11),
+            Map.entry("dec", 12)
+    );
 
     // String to valid time-representing int
     private int toNum(String s) {
         if (s.isEmpty() || s.length() > 8) return -1;
+        if (s.length() >= 3) {
+            String ss = s.substring(0, 3);
+            if (months.containsKey(ss)) return months.get(ss);
+        }
         int res = 0;
         for (int i = 0; i < s.length(); i++) {
             if (!Character.isDigit(s.charAt(i))) {
@@ -58,7 +76,8 @@ public class Time {
 
     /**
      * Accept formats: *day (enter 3 letter abbreviations * = mon, tue, ... or full word = monday, tuesday, ...)
-     * HHmm, HH-mm, YYYYMMDD, YYYYMMDD-HHmm, YYYY-MM-DD, DD-MM-YYYY, YYYYMMDD-HH-mm, YYYY-MM-DD-HHmm(or HH-mm), DD-MM-YYYY-HHmm(or HH-mm)
+     * HHmm, HH:mm, MM-DD, YYYYMMDD, YYYYMMDD-HHmm, YYYY-MM-DD, DD-MM-YYYY, YYYYMMDD-HH-mm, YYYY-MM-DD-HHmm(or HH-mm), DD-MM-YYYY-HHmm(or HH-mm)
+     * For 2 tokens, [: and other separators] are treated differently
      * This is a large constructor with time identifying logic
      * Assumes date = today (or tomorrow if provided time is before now) if not specified
      * Ignores hour and minute if only date specified
@@ -102,20 +121,34 @@ public class Time {
                 break;
             }
             case 2: {
-                if (isValidTime(times.get(0), times.get(1))) {
-                    // HH-mm
-                    time = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), times.get(0), times.get(1));
-                    if (time.isBefore(now)) {
-                        time = time.plusDays(1);
-                    }
-                    isAccurate = isUnderstood = true;
-                } else if (times.get(0) > now.getYear() * 10000) {
-                    // YYYYMMDD-HHmm
-                    int y = times.get(0) / 10000, M = times.get(0) % 10000, d = M % 100, h = times.get(1) / 100, m = times.get(1) % 100;
-                    M /= 100;
-                    if (isValidDate(y, M, d) && isValidTime(h, m)) {
-                        time = LocalDateTime.of(y, M, d, h, m);
+                if (s.contains(":")) {
+                    // HH:mm
+                    if (isValidTime(times.get(0), times.get(1))) {
+                        time = LocalDateTime.of(now.getYear(), now.getMonthValue(), now.getDayOfMonth(), times.get(0), times.get(1));
+                        if (time.isBefore(now)) {
+                            time = time.plusDays(1);
+                        }
                         isAccurate = isUnderstood = true;
+                    }
+                } else {
+                    // YYYYMMDD-HHmm
+                    if (times.get(0) > now.getYear() * 10000) {
+                        int y = times.get(0) / 10000, M = times.get(0) % 10000, d = M % 100, h = times.get(1) / 100, m = times.get(1) % 100;
+                        M /= 100;
+                        if (isValidDate(y, M, d) && isValidTime(h, m)) {
+                            time = LocalDateTime.of(y, M, d, h, m);
+                            isAccurate = isUnderstood = true;
+                        }
+                        break;
+                    }
+                    // MM-DD
+                    int y = now.getYear(), m = times.get(0), d = times.get(1);
+                    if (isValidDate(y, m, d) && LocalDateTime.of(y, m, d, 0, 0).isAfter(LocalDateTime.now())) {
+                        time = LocalDateTime.of(y, m, d, 0, 0);
+                        isUnderstood = true;
+                    } else if (isValidDate(y + 1, m, d)) {
+                        time = LocalDateTime.of(y + 1, m, d, 0, 0);
+                        isUnderstood = true;
                     }
                 }
                 break;

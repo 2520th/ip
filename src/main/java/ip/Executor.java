@@ -30,7 +30,7 @@ public class Executor {
         }
 
         switch (cmd.getCmdType()) {
-            case "bye", "exit": {
+            case "bye", "goodbye": {
                 return null;
             }
             // Intentional fall through here if list is not a command on its own

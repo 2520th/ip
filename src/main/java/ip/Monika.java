@@ -15,6 +15,7 @@ public class Monika {
     private int inputState = 0;
 
     public Monika() throws IOException {
+        storage.setupDataFolder();
         tasks = storage.loadTasks();
     }
 
@@ -26,31 +27,37 @@ public class Monika {
      */
     public String greeting() throws IOException {
         Storage storage = new Storage();
-        List<String> lines = storage.readLines("greetings.txt");
+        List<String> lines = storage.getLines("/greetings");
+        List<String> data = storage.readLines("data");
         String msg = "Hello! I'm Monika. What is your name?";
         String userName;
-        if (lines.get(0).equals("Monika")) {
+        if (data.get(0).equals("Monika")) {
             inputState = 1;
         } else {
-            msg = lines.get(1 + new Random().nextInt(lines.size() - 1));
-            userName = lines.get(0);
+            msg = lines.get(data.get(1).charAt(0) == '1' ? 20 + new Random().nextInt(7) : new Random().nextInt(20));
+            userName = data.get(0);
             msg = msg.replace("[player]", userName);
         }
+        data.set(1, "1");
+        storage.writeLines("data", data);
         return msg;
     }
 
     public String getResponse(String input) throws IOException {
-        // Regular inputs goes here
+
+        // inputState can only be 0 or 1 for now, it is not a boolean for more potential future interaction dialog updates
+        // State 0 (regular dialog)
         if (inputState == 0) {
             Command cmd = parser.parse(input);
-            String s = exe.execute(cmd, tasks);
-            if (s == null) {
-                storage.storeTasks(tasks);
+            String res = exe.execute(cmd, tasks);
+            if (res == null) {
+                storeFiles();
                 System.exit(0);
             }
-            return s;
+            return res;
         }
 
+        // State 1 (asking for user to input username when the application is first launched)
         // Illegal names branch
         if (input.isEmpty() || input.equalsIgnoreCase("monika")) {
             return "Oh no! Please try another name!";
@@ -58,9 +65,17 @@ public class Monika {
 
         // Successfully store username
         inputState = 0;
-        List<String> lines = storage.readLines("greetings.txt");
+        List<String> lines = storage.readLines("data");
         lines.set(0, input);
-        storage.writeLines("greetings.txt", lines);
+        storage.writeLines("data", lines);
         return String.format("Nice to meet you %s, welcome to the Literature Club! What can I help you today?", input);
+    }
+
+    private void storeFiles() throws IOException {
+        storage.storeTasks(tasks);
+        List<String> lines = storage.readLines("data");
+        // records exit status
+        lines.set(1, "0");
+        storage.writeLines("data", lines);
     }
 }
