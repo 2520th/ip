@@ -1,8 +1,7 @@
-
 plugins {
     id 'java'
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.14'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
@@ -10,42 +9,32 @@ repositories {
     mavenCentral()
 }
 
-application {
-    mainClass = 'ip.Main'
-}
-
+// JavaFX Plugin handles local development/running
 javafx {
     version = "17.0.7"
-    modules = [ 'javafx.controls', 'javafx.fxml' ]
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.base']
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
-    String javaFxVersion = '17.0.7'
-    implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'win'
-    implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'mac'
-    implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'linux'
-    implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'win'
-    implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'mac'
-    implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'linux'
-    implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'win'
-    implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'mac'
-    implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'linux'
-    implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'win'
-    implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'mac'
-    implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'linux'
+    String jfxVersion = '17.0.7'
+    String[] platforms = ['win', 'mac', 'linux']
+    String[] components = ['base', 'controls', 'fxml', 'graphics']
+
+    // Manually include all platform natives for the final JAR
+    platforms.each { platform ->
+        components.each { component ->
+            implementation "org.openjfx:javafx-${component}:${jfxVersion}:${platform}"
+        }
+    }
 }
 
-test {
-    useJUnitPlatform()
+application {
+    // IMPORTANT: Point this to your Launcher class (see Step 2)
+    mainClass.set("ip.Launcher")
 }
 
 shadowJar {
-    archiveFileName = 'Monika.jar'
+    archiveBaseName = "Monika"
+    // Merge service files for proper library loading
+    mergeServiceFiles()
 }
