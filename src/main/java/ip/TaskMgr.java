@@ -117,14 +117,16 @@ public class TaskMgr {
      * @return a whole String containing a list of matched strings for Monika to say
      */
     public String find(String pattern) {
+        pattern = pattern.toLowerCase();
         StringBuilder res = new StringBuilder();
         int index = 0;
         res.append("Here are the matching tasks in your list:\n");
         for (int i = 0; i < arrLen; i++) {
-            if (tasks[i].getName().contains(pattern)) {
+            if (tasks[i].getName().toLowerCase().contains(pattern)) {
                 res.append(++index).append(". ").append(tasks[i]).append('\n');
             }
         }
+        if (index == 0) return "Emm, i don't think there are any tasks that match.";
         return res.toString();
     }
 
