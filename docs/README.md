@@ -4,7 +4,7 @@ This is a greenfield Java project where you can interact with Monika from the vi
 
 ## This application is very easy to use. Just
 
-* Download a JAR release from [here](github.com/2520th/ip/releases)
+* Download a JAR release from [here](https://github.com/2520th/ip/releases)
 * Click the JAR file to start
 
 ## What can Monika do now?
@@ -27,6 +27,9 @@ This is a greenfield Java project where you can interact with Monika from the vi
    - [ ] deadline (String task_description) /by (String time)
    - [ ] event (String task_description) /from (String time) /to (String time)
 6. A Data folder will be generated in a parallel folder structure to the JAR
+
+## Screenshots of UI in action:
+![A few screenshots together from left to right (chronological order)](Ui.png)
 
 ## Please remember to say bye to her when closing the application
 
