@@ -26,6 +26,8 @@ dependencies {
             implementation "org.openjfx:javafx-${component}:${jfxVersion}:${platform}"
         }
     }
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
 }
 
 application {
@@ -37,4 +39,8 @@ shadowJar {
     archiveBaseName = "Monika"
     // Merge service files for proper library loading
     mergeServiceFiles()
+}
+
+test {
+    useJUnitPlatform() // Required for JUnit 5 to run
 }

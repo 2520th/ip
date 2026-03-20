@@ -11,6 +11,10 @@ public class Deadline extends Task{
         time = new Time(t);
     }
 
+    public boolean getTimeIsUnderstood() {
+        return time.getIsUnderstood();
+    }
+
     @Override
     public String toString() {
         return String.format("[D] %s (by: %s)", super.toString(), time);

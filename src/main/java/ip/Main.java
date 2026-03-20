@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-// IP Week 5: Add Extension C - Natural Dates
+// Extension C - Natural Dates is chosen for this IP
 // Chat with Monika from Doki Doki Literature Club
 public class Main extends Application {
 

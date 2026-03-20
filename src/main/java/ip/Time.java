@@ -8,10 +8,12 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
 public class Time {
+
     private final String original;
     private boolean isUnderstood;
     private boolean isAccurate;
     private LocalDateTime time;
+
     private final Map<String, DayOfWeek> days = Map.of(
             "mon", DayOfWeek.MONDAY,
             "tue", DayOfWeek.TUESDAY,
@@ -57,10 +59,7 @@ public class Time {
     private List<Integer> toTimes(String[] tokens) {
         List<Integer> res = new ArrayList<>();
         for (String token : tokens) {
-            int t = toNum(token);
-            if (t != -1) {
-                res.add(t);
-            }
+            res.add(toNum(token));
         }
         return res;
     }
@@ -87,18 +86,18 @@ public class Time {
     public Time(String s) {
         original = s;
         s = s.toLowerCase();
+        LocalDateTime now = LocalDateTime.now();
         if (s.length() > 5 && s.endsWith("day")) {
             s = s.substring(0, 3);
         }
         if (days.containsKey(s)) {
             isUnderstood = true;
-            time = LocalDateTime.now().with(TemporalAdjusters.next(days.get(s)));
+            time = now.with(TemporalAdjusters.next(days.get(s)));
             return;
         }
         String[] tokens = s.split("[-/.: ]");
         isAccurate = isUnderstood = false;
         List<Integer> times = toTimes(tokens);
-        LocalDateTime now = LocalDateTime.now();
         switch (times.size()) {
             case 1: {
                 int h = times.get(0) / 100, m = times.get(0) % 100;
@@ -109,7 +108,7 @@ public class Time {
                         time = time.plusDays(1);
                     }
                     isAccurate = isUnderstood = true;
-                } else if (times.get(0) > now.getYear() * 10000) {
+                } else if (times.get(0) > 19000000) {
                     // YYYYMMDD
                     int ty = times.get(0) / 10000, tm = times.get(0) % 10000, td = tm % 100;
                     tm /= 100;
@@ -132,7 +131,7 @@ public class Time {
                     }
                 } else {
                     // YYYYMMDD-HHmm
-                    if (times.get(0) > now.getYear() * 10000) {
+                    if (times.get(0) > 19000000) {
                         int y = times.get(0) / 10000, M = times.get(0) % 10000, d = M % 100, h = times.get(1) / 100, m = times.get(1) % 100;
                         M /= 100;
                         if (isValidDate(y, M, d) && isValidTime(h, m)) {
@@ -143,7 +142,7 @@ public class Time {
                     }
                     // MM-DD
                     int y = now.getYear(), m = times.get(0), d = times.get(1);
-                    if (isValidDate(y, m, d) && LocalDateTime.of(y, m, d, 0, 0).isAfter(LocalDateTime.now())) {
+                    if (isValidDate(y, m, d) && LocalDateTime.of(y, m, d, 0, 0).isAfter(now)) {
                         time = LocalDateTime.of(y, m, d, 0, 0);
                         isUnderstood = true;
                     } else if (isValidDate(y + 1, m, d)) {
@@ -198,6 +197,15 @@ public class Time {
                 }
             }
         }
+    }
+    
+    // Used to inform user that a deadline or event time is not understood
+    public boolean getIsUnderstood() {
+        return isUnderstood;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
     }
 
     @Override

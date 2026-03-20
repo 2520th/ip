@@ -112,7 +112,7 @@ public class TaskMgr {
     }
 
     /**
-     * find method for user to search a keyword for relevant tasks
+     * find method for user to search for relevant tasks
      * @param pattern is what the user wants to find
      * @return a whole String containing a list of matched strings for Monika to say
      */

@@ -4,6 +4,9 @@ import ip.tasks.*;
 
 public class Executor {
 
+    // Store whether the conversation is continued due to a double check on suspicious tasks
+    private boolean isContd = false;
+
     /**
      * Treat time-representing StringBuilders from reading tokens after /from, /to, /by sub-commands
      * @param sb takes in StringBuilder containing time info
@@ -27,6 +30,20 @@ public class Executor {
 
         if (cmd == null || cmd.getCmdType().isEmpty()) {
             return "Don't be shy, say something to me.";
+        }
+
+        // Yes/No question asking the user whether to keep the erroneous looking deadline/event
+        if (isContd) {
+            if (cmd.getCmdType().equalsIgnoreCase("yes")) {
+                isContd = false;
+                return String.format("Sure, I will add this task to my list as it is:\n%s",
+                        taskList.getTask(taskList.getSize() - 1));
+            } else if (cmd.getCmdType().equalsIgnoreCase("no")) {
+                isContd = false;
+                taskList.removeTask(taskList.getSize() - 1);
+                return "No problem, that task is ignored.";
+            }
+            return "Please tell me yes or no.";
         }
 
         switch (cmd.getCmdType()) {
@@ -81,10 +98,10 @@ public class Executor {
                 return "Hey! The description of an todo task cannot be empty.";
             }
             case "find": {
-                if (cmd.getContents().length == 1) {
+                if (cmd.getContents().length > 0) {
                     return taskList.find(cmd.getContents()[0]);
                 }
-                return "Please tell me one keyword to find.";
+                return "Please tell me what to find.";
             }
             case "event": {
                 if (cmd.getContents().length > 0) {
@@ -105,9 +122,33 @@ public class Executor {
                         to.append(cmd.getContents()[j]).append(' ');
                     }
 
+                    if (name.isEmpty()) {
+                        return "Event should have a description, right?";
+                    }
+
                     Event e = new Event(trimStringBuilder(name), trimStringBuilder(from), trimStringBuilder(to));
                     taskList.addTask(e);
-                    return String.format("Got it. I've added this event:\n%s", e);
+
+                    return switch (e.timesAreUnderstood()) {
+                        case 0 -> String.format("Got it. I've added this event:\n%s", e);
+                        case 1 -> {
+                            isContd = true;
+                            yield "I don't understand the starting time of your event, do you still want to add it as it is?";
+                        }
+                        case 2 -> {
+                            isContd = true;
+                            yield "I don't understand the ending time of your event, do you still want to add it as it is?";
+                        }
+                        case 3 -> {
+                            isContd = true;
+                            yield "Hmm, I don't understand both times you provided... Do you still want to add the event as it is?";
+                        }
+                        case 4 -> {
+                            taskList.removeTask(taskList.getSize() - 1);
+                            yield "Hey, start time can't be after end time.";
+                        }
+                        default -> throw new RuntimeException("Event state is incorrect.");
+                    };
                 }
                 return "Hey! The description of an event cannot be empty.";
             }
@@ -124,9 +165,17 @@ public class Executor {
                         by.append(cmd.getContents()[j]).append(' ');
                     }
 
+                    if (name.isEmpty()) {
+                        return "Wait, please tell me what is this deadline for.";
+                    }
+
                     Deadline d = new Deadline(trimStringBuilder(name), trimStringBuilder(by));
                     taskList.addTask(d);
-                    return String.format("I've added this task for you:\n%s", d);
+                    if (d.getTimeIsUnderstood()) {
+                        return String.format("I've added this task for you:\n%s", d);
+                    }
+                    isContd = true;
+                    return "I don't understand the time of your deadline, do you still want to add it as it is?";
                 }
                 return "Hey! The description of a deadline task cannot be empty.";
             }
