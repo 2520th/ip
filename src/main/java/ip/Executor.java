@@ -166,7 +166,7 @@ public class Executor {
                     }
 
                     if (name.isEmpty()) {
-                        return "Wait, please tell me what is this deadline for.";
+                        return "Deadline description can't be empty.";
                     }
 
                     Deadline d = new Deadline(trimStringBuilder(name), trimStringBuilder(by));
