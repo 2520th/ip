@@ -28,6 +28,7 @@ public class Executor {
      */
     public String execute(Command cmd, TaskMgr taskList) {
 
+        // When user did not enter any words (entered nothing or only spaces)
         if (cmd == null || cmd.getCmdType().isEmpty()) {
             return "Don't be shy, say something to me.";
         }
@@ -46,6 +47,7 @@ public class Executor {
             return "Please tell me yes or no.";
         }
 
+        // Handle normal commands with a type and (optional) content
         switch (cmd.getCmdType()) {
             case "bye", "goodbye": {
                 return null;

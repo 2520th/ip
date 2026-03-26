@@ -1,6 +1,12 @@
 package ip;
 
 public class Parser {
+
+    /**
+     * Create a Command object from raw user inputs
+     * @param input is the original string
+     * @return Command object with first token as command, later ones as content
+     */
     public Command parse(String input) {
         String[] tokens = input.trim().split(" ");
         if (tokens.length == 0) {

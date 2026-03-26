@@ -64,11 +64,18 @@ public class Time {
         return res;
     }
 
+    /**
+     * Validate given year, month, day combination
+     * @param year = int value of year
+     * @param month = int value of month from 1 to 12
+     * @param day = int value of date from 1 to 28/30/31
+     * @return whether the combination of year, month, day provided is valid
+     */
     boolean isValidDate(int year, int month, int day) {
-        if (month < 1 || month > 12) return false;
-        return YearMonth.of(year, month).isValidDay(day);
+        return month > 0 && month < 13 && YearMonth.of(year, month).isValidDay(day);
     }
 
+    // Validate given hour and minute as int (0-23) : (0-59)
     boolean isValidTime(int hour, int minute) {
         return hour >= 0 && hour < 24 && minute >= 0 && minute < 60;
     }
@@ -199,11 +206,12 @@ public class Time {
         }
     }
     
-    // Used to inform user that a deadline or event time is not understood
+    // Use for testing and inform user whether a deadline or event time is not understood
     public boolean getIsUnderstood() {
         return isUnderstood;
     }
 
+    // Use for testing and event time logic checks to prevent start after end situation
     public LocalDateTime getTime() {
         return time;
     }
